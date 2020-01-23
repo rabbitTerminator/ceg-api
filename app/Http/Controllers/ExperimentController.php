@@ -12,17 +12,20 @@
     class ExperimentController extends Controller
     {
 
-        protected const EXPERIMENT_PREFIX = 'mereni_';
-        protected const RECALCULATED_PREFIX = 'prepocitane_';
+
+
+        const EXPERIMENT_PREFIX = 'mereni_';
+        const RECALCULATED_PREFIX = 'prepocitane_';
 
         public function getSensorList(SensorListRequest $request)
         {
+
             $input = DB::prepareBindings(
                 ['experimentName' => $request->input('experimentName')]
             )['experimentName'];
 
             $collection = collect(
-                DB::select("SELECT * FROM  " . $input . ".cidla ")
+                DB::select("SELECT * FROM  " .$this::EXPERIMENT_PREFIX. $input . ".cidla ")
             );
 
 
@@ -89,5 +92,7 @@
             return jsonResponseCollection($collection);
         }
 
+     function  test (int $a ,string $v){
 
+     }
     }
