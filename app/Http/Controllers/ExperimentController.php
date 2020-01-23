@@ -80,7 +80,7 @@
 
             $input = DB::prepareBindings(
                 [
-                    'tableName' => env('EXPERIMENT_PREFIX') . $request->input('experimentName') . '.datazustreden',
+                    'tableName' => $this::EXPERIMENT_PREFIX . $request->input('experimentName') . '.datazustreden',
                     'comStation' => "'" . $request->input('commutationStation') . "'"
                 ]
             );
