@@ -24,10 +24,13 @@ class RecalculatedSensorDataRequest extends RequestAbstract
      * @return array
      */
     public function rules(): array
+
     {
         return [
             'sensorId' => ['required','numeric'],
             'experimentName'=> ['required','string',new ExperimentNameRule],
+            'startDate'=>['required','date'],
+            'endDate' =>['nullable','date']
         ];
     }
 

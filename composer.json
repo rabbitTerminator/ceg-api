@@ -6,9 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=7.1.3",
+        "flipbox/lumen-generator": "^6.0",
+        "fruitcake/laravel-cors": "^1.0",
         "laravel/lumen-framework": "5.8.*",
-        "laravelista/lumen-vendor-publish": "^5.0",
-        "pearl/lumen-request-validate": "^1.3"
+        "pearl/lumen-request-validate": "^1.3",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

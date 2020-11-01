@@ -1,0 +1,82 @@
+version: '3.0'
+volumes:
+  mysql:
+    driver: local
+  phpmyadmin:
+    driver: local
+
+networks:
+  backend:
+     driver: bridge
+
+services:
+  nginx:
+    container_name: nginx_${APP_NAME}
+    build:
+      context: ./docker/nginx
+      args:
+       - PHP_UPSTREAM_CONTAINER=php-fpm
+       - PHP_UPSTREAM_PORT=9000
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - php-fpm
+    ports:
+      - "8081:80"
+    networks:
+      - backend
+
+
+  php-fpm:
+    container_name: php-fpm_${APP_NAME}
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  mysql:
+    container_name: mysql_${APP_NAME}
+    build:
+      dockerfile: build/Dockerfile
+      context: ./docker/mysql
+    command: --default-authentication-plugin=mysql_native_password --max_allowed_packet=536870912
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/scripts/sql/dumps/dev.sql:/docker-entrypoint-initdb.d/dev.sql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=CEG
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=${DB_PASSWORD_ONE}
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=mysql
+    networks:
+      - backend
+
+
+  phpmyadmin:
+          container_name: phpmyadmin_${APP_NAME}
+          image: phpmyadmin/phpmyadmin
+          environment:
+            - PMA_HOST=mysql
+            - PMA_ARBITRARY=0
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+          ports:
+            - "8080:80"
+          depends_on:
+            - mysql
+          networks:
+            - backend
+
+
+
+

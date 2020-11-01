@@ -58,7 +58,10 @@ $app->singleton(
 */
 
  $app->middleware([
-     App\Http\Middleware\ExampleMiddleware::class
+     Fruitcake\Cors\HandleCors::class,
+     \App\Http\Middleware\Cors::class,
+     App\Http\Middleware\ExampleMiddleware::class,
+
  ]);
 
  $app->routeMiddleware([
@@ -78,8 +81,12 @@ $app->singleton(
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+ $app->register(Fruitcake\Cors\CorsServiceProvider::class);
  $app->register(App\Providers\EventServiceProvider::class);
  $app->register(Pearl\RequestValidate\RequestServiceProvider::class);
+ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+ $app->register(Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -97,5 +104,11 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+    $app->configure('app');
+    $app->configure('database');
+    $app->configure('cache');
+    $app->configure('cors');
+
 
 return $app;

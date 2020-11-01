@@ -60,13 +60,12 @@
                 $sensorId = str_replace('.', '_', $sensorId);
                 $table_name = env('RECALCULATED_PREFIX') . env('EXPERIMENT_PREFIX') . $experimentName . '.' . env('RECALCULATED_PREFIX');
 
-                $collection = collect(DB::select('select UTCcas, hodnota from ' . $table_name . $sensorId));
+                $collection = collect(DB::select('select  UTCcas, hodnota from ' . $table_name . $sensorId .' order by UTCcas DESC limit 1'));
 
                 if ($collection->isEmpty()) {
-                    $collection = collect(DB::select('select UTCcas, hodnota from ' . $table_name . '0' . $sensorId));
+                    $collection = collect(DB::select('select UTCcas, hodnota from ' . $table_name . '0' . $sensorId.' order by UTCcas DESC  limit 1'));
                 }
                 return !$collection->isEmpty() ? $collection : null;
-
 
             }
 
@@ -80,6 +79,26 @@
         }
     }
 
+    if(!function_exists('getSensorsDataRange')){
+        function getSensorsDataRange($sensorId,$experimentName,$startDate,$endDate){
+            $sensorId = str_replace('.', '_', $sensorId);
+            $table_name = env('RECALCULATED_PREFIX') . env('EXPERIMENT_PREFIX') . $experimentName . '.' . env('RECALCULATED_PREFIX');
+            $collection = null;
+           if($endDate != null){
+               $collection = DB::table( $table_name . $sensorId )
+                                ->whereDate('UTCcas','>=',\Illuminate\Support\Facades\Date::make($startDate))
+                                ->whereDate('UTCcas','>=',\Illuminate\Support\Facades\Date::make($endDate))
+                                ->get();
+           }else{
+               $collection = DB::table( $table_name . $sensorId )
+                                ->whereDate('UTCcas','>=',\Illuminate\Support\Facades\Date::make($startDate))
+                                ->get();
+           }
+
+           return $collection;
+
+        }
+    }
     if (!function_exists('jsonResponseCollection')) {
         function jsonResponseCollection(\Illuminate\Support\Collection $collection)
         {

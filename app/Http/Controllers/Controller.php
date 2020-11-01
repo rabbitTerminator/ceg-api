@@ -5,13 +5,21 @@
     use Illuminate\Http\Request;
     use Illuminate\Pagination\LengthAwarePaginator;
     use Illuminate\Support\Collection;
+    use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\DB;
 
     use Laravel\Lumen\Routing\Controller as BaseController;
 
     class Controller extends BaseController
     {
-
+        protected function respondWithToken($token)
+        {
+            return response()->json([
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => Auth::factory()->getTTL() * 60
+            ], 200);
+        }
 
         public function paginate(Collection $collection, $perPage, $total = null, $page = null, $pageName = 'page')
         {
@@ -43,5 +51,14 @@
             return jsonResponseCollection($collection);
         }
 
-
+        public function getSenorLastValue($sensorId, $experimentName)
+        {
+            $collection = getSensorById($sensorId, $experimentName, true);
+            $cas = isset($collection->first->UTCcas->UTCcas) ? $collection->first->UTCcas->UTCcas : 'null';
+            $hod = isset($collection->first->hodnota->hodnota)? $collection->first->hodnota->hodnota:'null';
+            return ([
+                'UTCcas' => utf8_encode($cas),
+                'hodnota' => utf8_encode($hod)
+            ]);
+        }
     }

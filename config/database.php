@@ -40,20 +40,22 @@
 
             'mysql' => [
                 'driver' => 'mysql',
-                'host' => env('DB_HOST_ONE', 'ceg.cdbtpwycg3xt.eu-central-1.rds.amazonaws.com'),
-                'port' => env('DB_PORT_ONE', 3306),
+                'host' => env('DB_HOST_ONE', 'localhost'),
+                'port' => env('DB_PORT_ONE', 3308),
                 'database' => env('DB_DATABASE_ONE','CEG'),
                 'username' => env('DB_USERNAME_ONE', 'root'),
                 'password' => env('DB_PASSWORD_ONE', '159753aa'),
+                'charset'   => 'utf8'
             ],
 
             'local' => [
                 'driver' => 'mysql',
-                'host' => env('DB_HOST_ONE', 'ceg.cdbtpwycg3xt.eu-central-1.rds.amazonaws.com'),
-                'port' => env('DB_PORT_ONE', 3306),
+                'host' => env('DB_HOST_ONE', 'localhost'),
+                'port' => env('DB_PORT_ONE', 3308),
                 'database' => env('DB_DATABASE_ONE','CEG'),
                 'username' => env('DB_USERNAME_ONE', 'root'),
                 'password' => env('DB_PASSWORD_ONE', '159753aa'),
+                'charset'   => 'utf8'
             ],
 
 
